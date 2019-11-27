@@ -48,12 +48,14 @@ public class Updates {
      */
     public void displayUpdateLevelInfo() throws IOException, URISyntaxException {
         String readLine;
+        int lastIndexOf = ExtractInfo.getProductDetails().lastIndexOf('-');
         String url = "https://freetest.free.beeceptor.com/my/api/path" + "?email=" +
                 URLEncoder.encode(ExtractInfo.getUsername(), "UTF-8") + "&product-name=" +
-                URLEncoder.encode(ExtractInfo.getProductDetails().split("-")[0], "UTF-8")
-                + "&product-version=" + URLEncoder.encode(ExtractInfo.getProductDetails().split("-")[1],
+                URLEncoder.encode(ExtractInfo.getProductDetails().substring(0,lastIndexOf), "UTF-8")
+                + "&product-version=" + URLEncoder.encode(ExtractInfo.getProductDetails().substring(lastIndexOf+1),
                 "UTF-8") + "&operating-system=" + URLEncoder.encode(ExtractInfo.getOs(), "UTF-8") +
                 "&updates-level=" + URLEncoder.encode(String.valueOf(ExtractInfo.getUpdateLevel()), "UTF-8");
+        LOGGER.info(url);
         URL urlForGetRequest = new URL(url);
         HttpsURLConnection connection = (HttpsURLConnection) urlForGetRequest.openConnection();
         connection.setRequestProperty("-H", "Content-Type: application/json");
