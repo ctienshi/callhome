@@ -15,9 +15,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.carbon.update.info.callhome;
+package org.wso2.carbon.updates.info.callhome;
 
-import org.wso2.carbon.update.info.callhome.updates.Updates;
+import org.wso2.carbon.updates.info.callhome.updates.Updates;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -28,19 +28,18 @@ import java.net.URISyntaxException;
  * updates available for the running product and notify users accordingly.
  *
  * @version 1.0.0
- * @since 2019-11-01
+ * @since 1.0.0
  */
 public class CallHome {
 
     /**
-     * This is the main method which makes use of getOS, getUsername and getUpdateLevel methods.
+     * This is the main method which makes use of getOs, getUsername and getUpdateLevel methods.
      *
      * @param args Unused
      * @throws IOException If an IO exception occurs
      */
     public static void main(String[] args) throws IOException, URISyntaxException {
         Updates update = new Updates();
-        update.getUpdateInfo();
+        update.displayUpdateLevelInfo();
     }
-
 }

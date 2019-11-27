@@ -16,16 +16,6 @@
     <modelVersion>4.0.0</modelVersion>
     <dependencies>
         <dependency>
-            <groupId>com.fasterxml.jackson.dataformat</groupId>
-            <artifactId>jackson-dataformat-yaml</artifactId>
-            <version>2.3.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.2.3</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.4</version>
@@ -52,7 +42,7 @@
         </dependency>
     </dependencies>
     <properties>
-        <mainClass>org.wso2.carbon.update.info.callhome.CallHome</mainClass>
+        <mainClass>org.wso2.carbon.updates.info.callhome.CallHome</mainClass>
     </properties>
     <build>
         <resources>
@@ -87,7 +77,7 @@
                                         implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.wso2.carbon.update.info.callhome.CallHome</mainClass>
+                                    <mainClass>org.wso2.carbon.updates.info.callhome.CallHome</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>

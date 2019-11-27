@@ -15,9 +15,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.carbon.update.info.callhome.utils;
+package org.wso2.carbon.updates.info.callhome.utils;
 
-import org.wso2.carbon.update.info.callhome.CallHome;
+import org.apache.commons.io.FileUtils;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -28,34 +28,28 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
-
 
 import static java.lang.System.getProperty;
 
 
 /**
  * The ExtractInfo program implements an application where it retrieves the Operating System, email address
- * of the user and the latest update level of the product.
+ * of the user and the latest updates level of the product.
  *
  * @version 1.0.0
- * @since 2019-11-01
+ * @since 1.0.0
  */
 public class ExtractInfo {
-    private static final Logger LOGGER = Logger.getLogger(CallHome.class.getName());
 
-    private String getProductHome() throws IOException, URISyntaxException {
-        String productHome = new File(ExtractInfo.class.getProtectionDomain().getCodeSource().getLocation()
-                .toURI()).getPath();
-        LOGGER.info("----------------------------------");
-        LOGGER.info(productHome);
-        LOGGER.info("----------------------------------");
-        File file = new File("").getCanonicalFile();
-        return file.getParent();
+    private static String getProductHome() throws URISyntaxException {
+        return new File(ExtractInfo.class.getProtectionDomain().getCodeSource().getLocation()
+                .toURI()).getParentFile().getParent();
     }
 
     /**
@@ -63,7 +57,7 @@ public class ExtractInfo {
      *
      * @return String This returns the Operating System.
      */
-    public String getOS() {
+    public static String getOs() {
         return getProperty("os.name");
     }
 
@@ -72,22 +66,25 @@ public class ExtractInfo {
      *
      * @return String This returns the email address.
      */
-    public String getUsername() throws IOException, URISyntaxException {
+    public static String getUsername() throws IOException, URISyntaxException {
 
         Yaml yaml = new Yaml();
-        String path = getProductHome() + "/updates/config.yaml";
-        InputStream inputStream = new FileInputStream(path);
-        Reader fileReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-        Map<String, Object> yamlMaps = yaml.load(fileReader);
-        return (String) yamlMaps.get("username");
+        String configPath = getProductHome() + "/updates/config.yaml";
+        if (Files.exists(Paths.get(configPath))) {
+            InputStream inputStream = new FileInputStream(configPath);
+            Reader fileReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+            Map<String, Object> yamlMaps = yaml.load(fileReader);
+            return (String) yamlMaps.get("username");
+        }
+        return "";
     }
 
     /**
-     * This method is used to retrieve the latest the update level of the users product.
+     * This method is used to retrieve the latest the updates level of the users product.
      *
-     * @return Long This returns the update time stamp
+     * @return Long This returns the updates time stamp
      */
-    public Long getUpdateLevel() throws IOException, URISyntaxException {
+    public static Long getUpdateLevel() throws URISyntaxException {
         Long lastUpdateLevel = 0L;
         File updatesDirectory = new File(getProductHome() + "/updates/wum/");
         File[] listOfFiles = updatesDirectory.listFiles();
@@ -101,5 +98,18 @@ public class ExtractInfo {
             lastUpdateLevel = Collections.max(myList);
         }
         return lastUpdateLevel;
+    }
+
+    /**
+     * This method is used to retrieve the product details
+     *
+     * @return String This returns the product name and version.
+     * @throws URISyntaxException If an URI Syntax Error occurs
+     * @throws IOException        If an IO exception occurs
+     */
+    public static String getProductDetails() throws URISyntaxException, IOException {
+        String productInfoPath = getProductHome() + "/updates/product.txt";
+        File file = new File(productInfoPath);
+        return FileUtils.readFileToString(file, String.valueOf(StandardCharsets.UTF_8));
     }
 }
